@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="../../Organization/knxprod-support/knx_project_14/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<KNX xmlns:op="http://github.com/OpenKNX/OpenKNXproducer"
+  xmlns="http://knx.org/xml/project/14" CreatedBy="KNX MT" ToolVersion="5.1.255.16695">
+  <ManufacturerData>
+    <Manufacturer>
+      <ApplicationPrograms>
+        <ApplicationProgram>
+          <Static>
+            <Parameters>
+              <!-- Channel name -->
+              <Parameter Id="%AID%_P-%TT%%CC%000" Name="Channel%C%Name" ParameterType="%AID%_PT-Text40Byte" Text="Bezeichnung" Value="" />
+
+              <!-- Provider type (Byte 0) -->
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%MID%" Offset="0" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%001" Name="CH%C%ProviderType" ParameterType="%AID%_PT-EPProviderType" Offset="0" BitOffset="0" Text="Strompreisanbieter" Value="1" />
+              </Union>
+
+              <!-- Country (Byte 1) – visible only when ProviderType = aWATTar -->
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%MID%" Offset="1" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%002" Name="CH%C%Country" ParameterType="%AID%_PT-EPCountry" Offset="0" BitOffset="0" Text="Land" Value="0" />
+              </Union>
+
+              <!-- Refresh interval (Byte 2) -->
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%MID%" Offset="2" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%003" Name="CH%C%RefreshInterval" ParameterType="%AID%_PT-EPRefreshInterval" Offset="0" BitOffset="0" Text="Automatische Aktualisierung" Value="2" />
+              </Union>
+
+              <!-- Price level: cheap threshold ct/kWh * 10 (Bytes 3-4) -->
+              <Union SizeInBit="16">
+                <Memory CodeSegment="%MID%" Offset="3" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%004" Name="CH%C%PriceLevelCheap" ParameterType="%AID%_PT-EPPriceLevel" Offset="0" BitOffset="0" Text="Günstig bis (ct/kWh × 10)" Value="150" />
+              </Union>
+
+              <!-- Price level: expensive threshold ct/kWh * 10 (Bytes 5-6) -->
+              <Union SizeInBit="16">
+                <Memory CodeSegment="%MID%" Offset="5" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%005" Name="CH%C%PriceLevelExpensive" ParameterType="%AID%_PT-EPPriceLevel" Offset="0" BitOffset="0" Text="Teuer ab (ct/kWh × 10)" Value="300" />
+              </Union>
+
+              <!-- Cheapest consecutive window in hours (Byte 7) -->
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%MID%" Offset="7" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%006" Name="CH%C%CheapestWindowHours" ParameterType="%AID%_PT-EPWindowHours" Offset="0" BitOffset="0" Text="Günstigste zusammenhängende Stunden" Value="1" />
+              </Union>
+            </Parameters>
+            <ParameterRefs>
+              <!-- Channel name -->
+              <ParameterRef Id="%AID%_P-%TT%%CC%000_R-%TT%%CC%00001" RefId="%AID%_P-%TT%%CC%000" />
+              <!-- Provider type -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_UP-%TT%%CC%001" />
+              <!-- Country -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_UP-%TT%%CC%002" />
+              <!-- Refresh interval -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_UP-%TT%%CC%003" />
+              <!-- Cheap threshold -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_UP-%TT%%CC%004" />
+              <!-- Expensive threshold -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_UP-%TT%%CC%005" />
+              <!-- Cheapest window hours -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_UP-%TT%%CC%006" />
+            </ParameterRefs>
+            <ComObjectTable>
+              <!-- Aktueller Strompreis (ct/kWh) -->
+              <ComObject Id="%AID%_O-%TT%%CC%000" Number="%K0%" Name="CH%C%CurrentPrice" Text="" ObjectSize="2 Bytes" DatapointType="DPST-9-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <!-- Durchschnittspreis heute (ct/kWh) -->
+              <ComObject Id="%AID%_O-%TT%%CC%001" Number="%K1%" Name="CH%C%AvgPriceToday" Text="" ObjectSize="2 Bytes" DatapointType="DPST-9-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <!-- Mindestpreis heute (ct/kWh) -->
+              <ComObject Id="%AID%_O-%TT%%CC%002" Number="%K2%" Name="CH%C%MinPriceToday" Text="" ObjectSize="2 Bytes" DatapointType="DPST-9-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <!-- Höchstpreis heute (ct/kWh) -->
+              <ComObject Id="%AID%_O-%TT%%CC%003" Number="%K3%" Name="CH%C%MaxPriceToday" Text="" ObjectSize="2 Bytes" DatapointType="DPST-9-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <!-- Preisniveau (0=günstig, 1=normal, 2=teuer) -->
+              <ComObject Id="%AID%_O-%TT%%CC%004" Number="%K4%" Name="CH%C%PriceLevel" Text="" ObjectSize="1 Byte" DatapointType="DPST-5-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <!-- Morgen-Preise verfügbar -->
+              <ComObject Id="%AID%_O-%TT%%CC%005" Number="%K5%" Name="CH%C%TomorrowAvailable" Text="" ObjectSize="1 Bit" DatapointType="DPST-1-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <!-- Beginn des günstigsten Fensters (Uhrzeit) -->
+              <ComObject Id="%AID%_O-%TT%%CC%006" Number="%K6%" Name="CH%C%CheapestWindowStart" Text="" ObjectSize="3 Bytes" DatapointType="DPST-10-1" FunctionText="" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+            </ComObjectTable>
+            <ComObjectRefs>
+              <!-- Aktueller Strompreis -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%000_R-%TT%%CC%00001" RefId="%AID%_O-%TT%%CC%000" Name="CH%C%CurrentPrice" Text="Aktueller Strompreis" FunctionText="Strompreis: ct/kWh" Priority="Low" />
+              <!-- Durchschnittspreis heute -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" RefId="%AID%_O-%TT%%CC%001" Name="CH%C%AvgPriceToday" Text="Durchschnittspreis Heute" FunctionText="Strompreis: ct/kWh" Priority="Low" />
+              <!-- Mindestpreis heute -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" RefId="%AID%_O-%TT%%CC%002" Name="CH%C%MinPriceToday" Text="Mindestpreis Heute" FunctionText="Strompreis: ct/kWh" Priority="Low" />
+              <!-- Höchstpreis heute -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" RefId="%AID%_O-%TT%%CC%003" Name="CH%C%MaxPriceToday" Text="Höchstpreis Heute" FunctionText="Strompreis: ct/kWh" Priority="Low" />
+              <!-- Preisniveau -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" RefId="%AID%_O-%TT%%CC%004" Name="CH%C%PriceLevel" Text="Preisniveau" FunctionText="Strompreis: 0=günstig, 1=normal, 2=teuer" Priority="Low" />
+              <!-- Morgen verfügbar -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_O-%TT%%CC%005" Name="CH%C%TomorrowAvailable" Text="Morgen verfügbar" FunctionText="Strompreis: Ja/Nein" Priority="Low" />
+              <!-- Günstigstes Fenster -->
+              <ComObjectRef Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_O-%TT%%CC%006" Name="CH%C%CheapestWindowStart" Text="Günstigstes Preisfenster" FunctionText="Strompreis: Uhrzeit" Priority="Low" />
+            </ComObjectRefs>
+          </Static>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>

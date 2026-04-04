@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="../../Organization/knxprod-support/knx_project_14/knx-editor.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<KNX xmlns:op="http://github.com/OpenKNX/OpenKNXproducer" xmlns="http://knx.org/xml/project/14" CreatedBy="KNX MT" ToolVersion="5.1.255.16695">
+	<op:config name="%EP_NumChannelsDefault%" value="1" />
+	<ManufacturerData>
+		<Manufacturer>
+			<ApplicationPrograms>
+				<ApplicationProgram>
+					<Static>
+						<ParameterTypes>
+							<ParameterType Id="%AID%_PT-EPNumChannels" Name="EPNumChannels">
+								<TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="0" maxInclusive="%N%" />
+							</ParameterType>
+							<ParameterType Id="%AID%_PT-EPProviderType" Name="EPProviderType">
+								<TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+									<Enumeration Text="Deaktiviert" Value="0" Id="%ENID%" />
+									<Enumeration Text="aWATTar"     Value="1" Id="%ENID%" />
+								</TypeRestriction>
+							</ParameterType>
+							<ParameterType Id="%AID%_PT-EPCountry" Name="EPCountry">
+								<TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+									<Enumeration Text="Deutschland" Value="0" Id="%ENID%" />
+									<Enumeration Text="Österreich"  Value="1" Id="%ENID%" />
+								</TypeRestriction>
+							</ParameterType>
+							<ParameterType Id="%AID%_PT-EPRefreshInterval" Name="EPRefreshInterval">
+								<TypeRestriction Base="Value" SizeInBit="8">
+									<Enumeration Text="Keine"        Value="0" Id="%ENID%" />
+									<Enumeration Text="30 Minuten"   Value="1" Id="%ENID%" />
+									<Enumeration Text="Jede Stunde"  Value="2" Id="%ENID%" />
+									<Enumeration Text="Täglich"      Value="3" Id="%ENID%" />
+								</TypeRestriction>
+							</ParameterType>
+							<!-- Price threshold in ct/kWh * 10, range 0..500 → 0.0..50.0 ct/kWh -->
+							<ParameterType Id="%AID%_PT-EPPriceLevel" Name="EPPriceLevel">
+								<TypeNumber SizeInBit="16" Type="unsignedInt" minInclusive="0" maxInclusive="500" />
+							</ParameterType>
+							<!-- Cheapest window in hours 1..12 -->
+							<ParameterType Id="%AID%_PT-EPWindowHours" Name="EPWindowHours">
+								<TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="1" maxInclusive="12" />
+							</ParameterType>
+						</ParameterTypes>
+						<Parameters>
+							<!-- Number of channels -->
+							<Union SizeInBit="8">
+								<Memory CodeSegment="%MID%" Offset="0" BitOffset="0" />
+								<Parameter Id="%AID%_UP-%TT%00000" Name="VisibleChannels" ParameterType="%AID%_PT-EPNumChannels" Offset="0" BitOffset="0" Text="Verfügbare Kanäle" Value="%EP_NumChannelsDefault%" SuffixText=" von %N%" />
+							</Union>
+						</Parameters>
+						<ParameterRefs>
+							<ParameterRef Id="%AID%_UP-%TT%00000_R-%TT%0000001" RefId="%AID%_UP-%TT%00000" />
+						</ParameterRefs>
+						<ComObjectTable>
+							<!-- Refresh Energy Price Data -->
+							<ComObject Id="%AID%_O-%TT%00001" Name="RefreshData" Text="Strompreis aktualisieren" Number="0" FunctionText="EnergyPrice: Eingang, Auslöser" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+						</ComObjectTable>
+						<ComObjectRefs>
+							<!-- Refresh Energy Price Data -->
+							<ComObjectRef Id="%AID%_O-%TT%00001_R-%TT%0000101" RefId="%AID%_O-%TT%00001" Name="RefreshData" Priority="Low" ObjectSize="1 Bit" DatapointType="DPST-1-17" />
+						</ComObjectRefs>
+					</Static>
+				</ApplicationProgram>
+			</ApplicationPrograms>
+		</Manufacturer>
+	</ManufacturerData>
+</KNX>
