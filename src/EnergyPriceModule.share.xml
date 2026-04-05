@@ -52,13 +52,36 @@
 						</ParameterRefs>
 						<ComObjectTable>
 							<!-- Refresh Energy Price Data -->
-							<ComObject Id="%AID%_O-%TT%00001" Name="RefreshData" Text="Strompreis aktualisieren" Number="0" FunctionText="EnergyPrice: Eingang, Auslöser" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+							<ComObject Id="%AID%_O-%TT%00001" Name="RefreshData" Text="Strompreis aktualisieren" Number="0" FunctionText="Strompreis: Eingang, Auslöser" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
 						</ComObjectTable>
 						<ComObjectRefs>
 							<!-- Refresh Energy Price Data -->
 							<ComObjectRef Id="%AID%_O-%TT%00001_R-%TT%0000101" RefId="%AID%_O-%TT%00001" Name="RefreshData" Priority="Low" ObjectSize="1 Bit" DatapointType="DPST-1-17" />
 						</ComObjectRefs>
 					</Static>
+					<Dynamic>
+							<Channel Name="MainChannel%TT%" Text="Strompreis" Number="%PREFIX%" Id="%AID%_CH-%TT%" Icon="meter-electric-outline">
+							<ParameterBlock Id="%AID%_PB-nnn" Name="EPSettings" Text="Allgemein" Icon="cog-outline">
+								<ParameterSeparator Id="%AID%_PS-nnn" Text="Strompreis" UIHint="Headline" />
+								<ParameterSeparator Id="%AID%_PS-nnn" Text="Version: %ModuleVersion%" />
+								<ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+								<ParameterSeparator Id="%AID%_PS-nnn" Text="Kanalauswahl" UIHint="Headline" />
+								<ParameterRefRef IndentLevel="1" RefId="%AID%_UP-%TT%00000_R-%TT%0000001" />
+								<ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
+								<ComObjectRefRef RefId="%AID%_O-%TT%00001_R-%TT%0000101" />
+							</ParameterBlock>
+							<op:include href="EnergyPriceModule.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="EP" IsInner="true" />
+							<!-- More page: shown when fewer channels are selected than max -->
+							<choose ParamRefId="%AID%_UP-%TT%00000_R-%TT%0000001">
+								<when test="&lt;%N%">
+									<ParameterBlock Id="%AID%_PB-nnn" Name="EPAdditionalChannels" Text="(mehr)" Icon="dots-horizontal">
+										<ParameterSeparator Id="%AID%_PS-nnn" Text="Kanalauswahl" UIHint="Headline" />
+										<ParameterRefRef RefId="%AID%_UP-%TT%00000_R-%TT%0000001" />
+									</ParameterBlock>
+								</when>
+							</choose>
+						</Channel>
+					</Dynamic>
 				</ApplicationProgram>
 			</ApplicationPrograms>
 		</Manufacturer>

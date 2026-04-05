@@ -18,7 +18,12 @@ int16_t AwattarChannel::fillPrices(EnergyPriceHourlyData* prices, uint8_t maxCou
 
     HTTPClient http;
     http.begin(url);
-    http.setTimeout(10000);
+    http.setTimeout(8000);  // 8s: well under 16s watchdog window
+#ifdef ARDUINO_ARCH_RP2040
+    if (String(url).startsWith("https://"))
+        http.setInsecure();
+#endif
+    openknx.watchdog.loop();  // pet immediately before blocking http.GET()
     int httpCode = http.GET();
     if (httpCode != HTTP_CODE_OK)
     {
@@ -27,10 +32,13 @@ int16_t AwattarChannel::fillPrices(EnergyPriceHourlyData* prices, uint8_t maxCou
         return -1;
     }
 
-    // Use stream-based JSON parsing to reduce memory footprint
-    JsonDocument doc;
-    DeserializationError err = deserializeJson(doc, http.getStream());
+    // Buffer full response before parsing — getStream() can fail on chunked HTTPS
+    String responseBody = http.getString();
     http.end();
+
+    openknx.watchdog.loop();  // pet after data received, before JSON parse
+    JsonDocument doc;
+    DeserializationError err = deserializeJson(doc, responseBody);
 
     if (err)
     {

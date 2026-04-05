@@ -5,11 +5,12 @@
 class EnergyPriceModule : public EPChannelOwnerModule
 {
   public:
-    const char* name() override { return "EnergyPriceModule"; }
-    const char* version() override { return EP_ModuleVersion; }
+    EnergyPriceModule() : EPChannelOwnerModule(EP_ChannelCount) {}
+    const std::string name() override { return "EnergyPriceModule"; }
+    const std::string version() override { return std::to_string(EP_ModuleVersion); }
 
   protected:
-    OpenKNX::Channel* createChannel(uint8_t index) override;
+    OpenKNX::Channel* createChannel(uint8_t _channelIndex /* used in param macros, do not rename */) override;
 };
 
 extern EnergyPriceModule openknxEnergyPriceModule;

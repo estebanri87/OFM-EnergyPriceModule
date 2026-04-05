@@ -47,6 +47,7 @@ void BaseEnergyPriceChannel::loop()
             now++;  // 0 is used as "uninitialized" marker
 
         if (_updateIntervalInMs > 0 &&
+            now >= 60000 &&  // wait 60s after boot for NTP sync
             (_lastApiCall == 0 || (now - _lastApiCall > _updateIntervalInMs)))
         {
             _lastApiCall = now;
@@ -60,7 +61,7 @@ void BaseEnergyPriceChannel::processInputKo(GroupObject& ko)
     switch (ko.asap())
     {
         case EP_KoRefreshData:
-            if (ko.value(DPT_Trigger))
+            if (time(nullptr) >= 1577836800LL)  // only fetch after NTP is synced
                 fetchData();
             break;
     }
@@ -78,8 +79,10 @@ bool BaseEnergyPriceChannel::processCommand(const std::string cmd, bool diagnose
 
 void BaseEnergyPriceChannel::fetchData()
 {
+    openknx.watchdog.loop();  // pet before blocking HTTP call (16s watchdog)
     logInfoP("Fetching energy price data (channel %d)", _channelIndex);
     int16_t count = fillPrices(_hourlyPrices, EP_MAX_HOURLY_PRICES);
+    openknx.watchdog.loop();  // pet after HTTP call returned
     if (count < 0)
     {
         logErrorP("Failed to fetch energy prices (channel %d)", _channelIndex);
@@ -98,15 +101,31 @@ void BaseEnergyPriceChannel::calculateDerivedValues()
     if (_numPrices == 0)
         return;
 
-    // Determine today's date boundaries (midnight local time)
+    // Sanity check: require NTP time to be synced (any time after 2020-01-01)
     time_t now = time(nullptr);
+    if (now < 1577836800LL)  // 2020-01-01 00:00 UTC
+    {
+        logWarningP("System time not synced (time=%ld), skipping price calculation", (long)now);
+        return;
+    }
+    // Reset all derived values before recalculating to avoid stale data
+    _currentPrice_ct  = 0.0f;
+    _avgPriceToday_ct = 0.0f;
+    _minPriceToday_ct = 0.0f;
+    _maxPriceToday_ct = 0.0f;
+    _tomorrowAvailable = false;
+    _cheapestWindowStart = 0;
+
+    // Determine today's date boundaries (midnight local time)
+    // Use mktime(mday+1) instead of +86400 to handle DST transitions correctly.
     struct tm tmNow;
     localtime_r(&now, &tmNow);
     tmNow.tm_hour = 0;
     tmNow.tm_min  = 0;
     tmNow.tm_sec  = 0;
     time_t todayStart = mktime(&tmNow);
-    time_t tomorrowStart = todayStart + 86400;
+    tmNow.tm_mday++;
+    time_t tomorrowStart = mktime(&tmNow);
 
     float sum = 0.0f;
     float minPrice = 1e9f;
@@ -159,27 +178,32 @@ void BaseEnergyPriceChannel::calculateDerivedValues()
     else
         _priceLevel = EP_PRICE_LEVEL_NORMAL;
 
-    // Find cheapest N-hour window for today
+    // Find cheapest N-hour window for today.
+    // Each candidate window must consist of exactly 'windowSize' consecutive
+    // slots that are 3600s apart and all fall within today.
     for (uint8_t i = 0; i < _numPrices; i++)
     {
         time_t ts = _hourlyPrices[i].startTimestamp;
         if (ts < todayStart || ts >= tomorrowStart)
             continue;
-
-        // Sum of 'windowSize' consecutive hours starting at i
         if (i + windowSize > _numPrices)
             break;
-        float windowSum = 0.0f;
-        bool allToday = true;
+
+        float  windowSum  = 0.0f;
+        bool   valid      = true;
         for (uint8_t j = 0; j < windowSize; j++)
         {
-            time_t slotTs = _hourlyPrices[i + j].startTimestamp;
-            if (slotTs >= tomorrowStart) { allToday = false; break; }
-            windowSum += _hourlyPrices[i + j].price_ct_per_kWh;
+            const EnergyPriceHourlyData& slot = _hourlyPrices[i + j];
+            // Reject window if slot is outside today or not exactly 1h after predecessor
+            if (slot.startTimestamp >= tomorrowStart)
+                { valid = false; break; }
+            if (j > 0 && slot.startTimestamp != _hourlyPrices[i + j - 1].startTimestamp + 3600)
+                { valid = false; break; }
+            windowSum += slot.price_ct_per_kWh;
         }
-        if (allToday && windowSum < cheapestWindowSum)
+        if (valid && windowSum < cheapestWindowSum)
         {
-            cheapestWindowSum = windowSum;
+            cheapestWindowSum   = windowSum;
             cheapestWindowStart = ts;
         }
     }
@@ -199,8 +223,8 @@ void BaseEnergyPriceChannel::publishKos()
     KoEP_CHMinPriceToday.value(_minPriceToday_ct, DPT_Value_Temp);
     KoEP_CHMaxPriceToday.value(_maxPriceToday_ct, DPT_Value_Temp);
 
-    // Price level (0=cheap, 1=normal, 2=expensive) - DPT 5.x
-    KoEP_CHPriceLevel.value(_priceLevel, DPT_SceneNumber);
+    // Price level (0=cheap, 1=normal, 2=expensive) - DPT 5.010 (1-byte unsigned count)
+    KoEP_CHPriceLevel.value(_priceLevel, DPT_Value_1_Ucount);
 
     // Tomorrow prices available - DPT 1.001
     KoEP_CHTomorrowAvailable.value(_tomorrowAvailable, DPT_Switch);
@@ -210,8 +234,6 @@ void BaseEnergyPriceChannel::publishKos()
     {
         struct tm tmStart;
         localtime_r(&_cheapestWindowStart, &tmStart);
-        // DPT 10.001: packed as (day<<5 | hour), minute, second
-        uint32_t t = ((uint32_t)tmStart.tm_hour << 16) | ((uint32_t)tmStart.tm_min << 8) | tmStart.tm_sec;
-        KoEP_CHCheapestWindowStart.value(t, DPT_TimeOfDay);
+        KoEP_CHCheapestWindowStart.value(tmStart, DPT_TimeOfDay);
     }
 }
