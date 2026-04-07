@@ -13,14 +13,37 @@
 							</ParameterType>
 							<ParameterType Id="%AID%_PT-EPProviderType" Name="EPProviderType">
 								<TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
-									<Enumeration Text="Deaktiviert" Value="0" Id="%ENID%" />
-									<Enumeration Text="aWATTar"     Value="1" Id="%ENID%" />
-								</TypeRestriction>
-							</ParameterType>
-							<ParameterType Id="%AID%_PT-EPCountry" Name="EPCountry">
-								<TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
-									<Enumeration Text="Deutschland" Value="0" Id="%ENID%" />
-									<Enumeration Text="Österreich"  Value="1" Id="%ENID%" />
+								<Enumeration Text="Deaktiviert"    Value="0" Id="%ENID%" />
+								<Enumeration Text="aWATTar"        Value="1" Id="%ENID%" />
+								<Enumeration Text="Energy Charts"  Value="2" Id="%ENID%" />
+							</TypeRestriction>
+						</ParameterType>
+						<ParameterType Id="%AID%_PT-EPCountry" Name="EPCountry">
+							<TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+								<Enumeration Text="Deutschland" Value="0" Id="%ENID%" />
+								<Enumeration Text="Österreich"  Value="1" Id="%ENID%" />
+							</TypeRestriction>
+						</ParameterType>
+						<!-- Energy Charts Bidding Zone -->
+						<ParameterType Id="%AID%_PT-EPEnergyChartsBZN" Name="EPEnergyChartsBZN">
+							<TypeRestriction Base="Value" SizeInBit="8" UIHint="DropDown">
+								<Enumeration Text="Deutschland/Luxemburg (DE-LU)" Value="0"  Id="%ENID%" />
+								<Enumeration Text="Österreich (AT)"              Value="1"  Id="%ENID%" />
+								<Enumeration Text="Schweiz (CH)"                 Value="2"  Id="%ENID%" />
+								<Enumeration Text="Belgien (BE)"                 Value="3"  Id="%ENID%" />
+								<Enumeration Text="Frankreich (FR)"              Value="4"  Id="%ENID%" />
+								<Enumeration Text="Niederlande (NL)"             Value="5"  Id="%ENID%" />
+								<Enumeration Text="Dänemark West (DK1)"          Value="6"  Id="%ENID%" />
+								<Enumeration Text="Dänemark Ost (DK2)"           Value="7"  Id="%ENID%" />
+								<Enumeration Text="Norwegen 1 (NO1)"             Value="8"  Id="%ENID%" />
+								<Enumeration Text="Norwegen 2 (NO2)"             Value="9"  Id="%ENID%" />
+								<Enumeration Text="Norwegen 3 (NO3)"             Value="10" Id="%ENID%" />
+								<Enumeration Text="Norwegen 4 (NO4)"             Value="11" Id="%ENID%" />
+								<Enumeration Text="Norwegen 5 (NO5)"             Value="12" Id="%ENID%" />
+								<Enumeration Text="Schweden 1 (SE1)"             Value="13" Id="%ENID%" />
+								<Enumeration Text="Schweden 2 (SE2)"             Value="14" Id="%ENID%" />
+								<Enumeration Text="Schweden 3 (SE3)"             Value="15" Id="%ENID%" />
+								<Enumeration Text="Schweden 4 (SE4)"             Value="16" Id="%ENID%" />
 								</TypeRestriction>
 							</ParameterType>
 							<ParameterType Id="%AID%_PT-EPRefreshInterval" Name="EPRefreshInterval">
@@ -68,7 +91,12 @@
 								<ParameterSeparator Id="%AID%_PS-nnn" Text="Kanalauswahl" UIHint="Headline" />
 								<ParameterRefRef IndentLevel="1" RefId="%AID%_UP-%TT%00000_R-%TT%0000001" />
 								<ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
-								<ComObjectRefRef RefId="%AID%_O-%TT%00001_R-%TT%0000101" />
+								<!-- Refresh: nur sichtbar wenn mindestens 1 Kanal aktiviert -->
+								<choose ParamRefId="%AID%_UP-%TT%00000_R-%TT%0000001">
+									<when test="&gt;=1">
+										<ComObjectRefRef RefId="%AID%_O-%TT%00001_R-%TT%0000101" />
+									</when>
+								</choose>
 							</ParameterBlock>
 							<op:include href="EnergyPriceModule.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="EP" IsInner="true" />
 							<!-- More page: shown when fewer channels are selected than max -->

@@ -17,10 +17,16 @@
                 <Parameter Id="%AID%_UP-%TT%%CC%001" Name="CH%C%ProviderType" ParameterType="%AID%_PT-EPProviderType" Offset="0" BitOffset="0" Text="Strompreisanbieter" Value="1" />
               </Union>
 
-              <!-- Country (Byte 1) – visible only when ProviderType = aWATTar -->
+              <!-- Country (Byte 1) – nur bei aWATTar -->
               <Union SizeInBit="8">
                 <Memory CodeSegment="%MID%" Offset="1" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%TT%%CC%002" Name="CH%C%Country" ParameterType="%AID%_PT-EPCountry" Offset="0" BitOffset="0" Text="Land" Value="0" />
+              </Union>
+
+              <!-- Energy Charts Bidding Zone (Byte 1, selber Offset wie Country) -->
+              <Union SizeInBit="8">
+                <Memory CodeSegment="%MID%" Offset="1" BitOffset="0" />
+                <Parameter Id="%AID%_UP-%TT%%CC%007" Name="CH%C%EnergyChartsBZN" ParameterType="%AID%_PT-EPEnergyChartsBZN" Offset="0" BitOffset="0" Text="Handelszone" Value="0" />
               </Union>
 
               <!-- Refresh interval (Byte 2) -->
@@ -62,6 +68,8 @@
               <ParameterRef Id="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" RefId="%AID%_UP-%TT%%CC%005" />
               <!-- Cheapest window hours -->
               <ParameterRef Id="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" RefId="%AID%_UP-%TT%%CC%006" />
+              <!-- Energy Charts BZN -->
+              <ParameterRef Id="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" RefId="%AID%_UP-%TT%%CC%007" />
             </ParameterRefs>
             <ComObjectTable>
               <!-- Aktueller Strompreis (ct/kWh) -->
@@ -107,10 +115,18 @@
                     <ParameterRefRef RefId="%AID%_P-%TT%%CC%000_R-%TT%%CC%00001" />
                     <!-- Strompreisanbieter -->
                     <ParameterRefRef RefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101" />
-                    <!-- Land -->
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" />
+                    <!-- Land - nur bei aWATTar -->
+                    <choose ParamRefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101">
+                      <when test="1">
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" />
+                      </when>
+                      <when test="2">
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" />
+                      </when>
+                    </choose>
                     <!-- Automatische Aktualisierung -->
                     <ParameterRefRef RefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" />
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Preisgrenzen" UIHint="Headline" />
                     <!-- Günstig bis -->
                     <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" />

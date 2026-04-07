@@ -9,6 +9,7 @@ Automatisierungslogik (z. B. SG-Ready, Wallbox-Steuerung) wird nicht im Modul ab
 
 Folgende Anbieter stehen zur Auswahl:
 * [aWATTar](#awattar) – Deutschland und Österreich, kein API-Key erforderlich
+* [Energy Charts](#energy-charts) – 17 europäische Handelszonen, kein API-Key erforderlich
 
 ---
 
@@ -28,7 +29,19 @@ Weitere Informationen: https://www.awattar.de
 
 ---
 
-# Kanaleinstellungen
+<!-- DOC -->
+## Energy Charts
+
+Energy Charts (Fraunhofer ISE) liefert stündliche EPEX-SPOT-Preise für 17 europäische Gebotszonen.  
+Es wird kein API-Key benötigt.  
+Der Datenabruf erfolgt über die offene REST-API unter https://api.energy-charts.info  
+Die verfügbaren Handelszonen sind: DE-LU, AT, CH, BE, FR, NL, DK1, DK2, NO1–NO5, SE1–SE4.
+
+Weitere Informationen: https://www.energy-charts.info
+
+<!-- DOCEND -->
+
+---
 
 <!-- DOC -->
 ## Stromanbieter
@@ -39,6 +52,7 @@ Wählt den Datenanbieter für diesen Kanal.
 |------|-----------|
 | Deaktiviert | Kanal ist inaktiv |
 | aWATTar | EPEX-SPOT-Preise via aWATTar API |
+| Energy Charts | EPEX-SPOT-Preise via Fraunhofer ISE Energy Charts API |
 
 <!-- DOCEND -->
 
@@ -51,6 +65,26 @@ Nur relevant bei aWATTar: Wählt das Preisgebiet.
 |------|-----------|
 | Deutschland | api.awattar.de |
 | Österreich | api.awattar.at |
+
+<!-- DOCEND -->
+
+<!-- DOC -->
+## Handelszone
+
+Nur relevant bei Energy Charts: Wählt die europäische Gebotszone (Bidding Zone).
+
+| Wert | Gebotszone |
+|------|------------|
+| Deutschland/Luxemburg (DE-LU) | EPEX DE-LU |
+| Österreich (AT) | EPEX AT |
+| Schweiz (CH) | EPEX CH |
+| Belgien (BE) | EPEX BE |
+| Frankreich (FR) | EPEX FR |
+| Niederlande (NL) | EPEX NL |
+| Dänemark West (DK1) | Nord Pool DK1 |
+| Dänemark Ost (DK2) | Nord Pool DK2 |
+| Norwegen 1–5 (NO1–NO5) | Nord Pool NO |
+| Schweden 1–4 (SE1–SE4) | Nord Pool SE |
 
 <!-- DOCEND -->
 
