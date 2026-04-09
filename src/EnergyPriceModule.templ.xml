@@ -109,31 +109,31 @@
               <!-- Number of channels -->
               <choose ParamRefId="%AID%_UP-%TT%00000_R-%TT%0000001">
                 <when test="&gt;=%C%">
-                  <ParameterBlock Id="%AID%_PB-nnn" Name="f%CC%EP" Text="Kanal %C%: {{0: ...}}" TextParameterRefId="%AID%_P-%TT%%CC%000_R-%TT%%CC%00001" Icon="meter-electric-outline" ShowInComObjectTree="true">
+                  <ParameterBlock Id="%AID%_PB-nnn" Name="f%CC%EP" Text="Kanal %C%: {{0: ...}}" TextParameterRefId="%AID%_P-%TT%%CC%000_R-%TT%%CC%00001" Icon="meter-electric-outline" ShowInComObjectTree="true" HelpContext="EP-Stromanbieter">
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Strompreis Kanal %C%" UIHint="Headline" />
                     <!-- Kanalname -->
                     <ParameterRefRef RefId="%AID%_P-%TT%%CC%000_R-%TT%%CC%00001" />
                     <!-- Strompreisanbieter -->
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101" />
+                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101" HelpContext="EP-Stromanbieter" />
                     <!-- Land - nur bei aWATTar -->
                     <choose ParamRefId="%AID%_UP-%TT%%CC%001_R-%TT%%CC%00101">
                       <when test="1">
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" />
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%002_R-%TT%%CC%00201" HelpContext="EP-Land" />
                       </when>
                       <when test="2">
-                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" />
+                        <ParameterRefRef RefId="%AID%_UP-%TT%%CC%007_R-%TT%%CC%00701" HelpContext="EP-Handelszone" />
                       </when>
                     </choose>
                     <!-- Automatische Aktualisierung -->
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" />
+                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%003_R-%TT%%CC%00301" HelpContext="EP-Automatische-Aktualisierung" />
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                     <ParameterSeparator Id="%AID%_PS-nnn" Text="Preisgrenzen" UIHint="Headline" />
                     <!-- Günstig bis -->
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" />
+                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%004_R-%TT%%CC%00401" HelpContext="EP-Guenstig-bis" />
                     <!-- Teuer ab -->
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" />
+                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%005_R-%TT%%CC%00501" HelpContext="EP-Teuer-ab" />
                     <!-- Günstigstes Fenster -->
-                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" />
+                    <ParameterRefRef RefId="%AID%_UP-%TT%%CC%006_R-%TT%%CC%00601" HelpContext="EP-Guenstigstes-Preisfenster" />
                     <ComObjectRefRef RefId="%AID%_O-%TT%%CC%000_R-%TT%%CC%00001" />
                     <ComObjectRefRef RefId="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" />
                     <ComObjectRefRef RefId="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" />

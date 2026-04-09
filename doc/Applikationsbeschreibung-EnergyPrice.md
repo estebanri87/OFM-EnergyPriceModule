@@ -13,9 +13,26 @@ Folgende Anbieter stehen zur Auswahl:
 
 ---
 
+## Inhaltsverzeichnis
+
+- [Anbieter](#anbieter)
+  - [aWATTar](#awattar)
+  - [Energy Charts](#energy-charts)
+- [ETS-Parameter](#stromanbieter)
+  - [Stromanbieter](#stromanbieter)
+  - [Land](#land)
+  - [Handelszone](#handelszone)
+  - [Automatische Aktualisierung](#automatische-aktualisierung)
+  - [Günstig bis](#günstig-bis-ctkwh--10)
+  - [Teuer ab](#teuer-ab-ctkwh--10)
+  - [Günstigste zusammenhängende Stunden](#günstigste-zusammenhängende-stunden)
+- [Gruppenobjekte](#gruppenobjekte)
+
+---
+
 # Anbieter
 
-<!-- DOC -->
+<!-- DOC HelpContext="aWATTar" -->
 ## aWATTar
 
 aWATTar liefert stündliche EPEX-SPOT-Preise für Deutschland (`api.awattar.de`) und Österreich (`api.awattar.at`).  
@@ -29,7 +46,7 @@ Weitere Informationen: https://www.awattar.de
 
 ---
 
-<!-- DOC -->
+<!-- DOC HelpContext="Energy-Charts" -->
 ## Energy Charts
 
 Energy Charts (Fraunhofer ISE) liefert stündliche EPEX-SPOT-Preise für 17 europäische Gebotszonen.  
@@ -43,7 +60,7 @@ Weitere Informationen: https://www.energy-charts.info
 
 ---
 
-<!-- DOC -->
+<!-- DOC HelpContext="Stromanbieter" -->
 ## Stromanbieter
 
 Wählt den Datenanbieter für diesen Kanal.
@@ -56,7 +73,7 @@ Wählt den Datenanbieter für diesen Kanal.
 
 <!-- DOCEND -->
 
-<!-- DOC -->
+<!-- DOC HelpContext="Land" -->
 ## Land
 
 Nur relevant bei aWATTar: Wählt das Preisgebiet.
@@ -68,7 +85,7 @@ Nur relevant bei aWATTar: Wählt das Preisgebiet.
 
 <!-- DOCEND -->
 
-<!-- DOC -->
+<!-- DOC HelpContext="Handelszone" -->
 ## Handelszone
 
 Nur relevant bei Energy Charts: Wählt die europäische Gebotszone (Bidding Zone).
@@ -88,7 +105,7 @@ Nur relevant bei Energy Charts: Wählt die europäische Gebotszone (Bidding Zone
 
 <!-- DOCEND -->
 
-<!-- DOC -->
+<!-- DOC HelpContext="Automatische-Aktualisierung" -->
 ## Automatische Aktualisierung
 
 Legt fest, in welchem Intervall die Preise neu abgerufen werden.
@@ -104,7 +121,7 @@ Empfohlen: **Jede Stunde** – aWATTar liefert ohnehin nur stündliche Werte.
 
 <!-- DOCEND -->
 
-<!-- DOC -->
+<!-- DOC HelpContext="Guenstig-bis" -->
 ## Günstig bis (ct/kWh × 10)
 
 Preisschwelle für das Preisniveau „Günstig" in ct/kWh, multipliziert mit 10.  
@@ -112,7 +129,7 @@ Beispiel: Wert `150` entspricht 15,0 ct/kWh.
 
 <!-- DOCEND -->
 
-<!-- DOC -->
+<!-- DOC HelpContext="Teuer-ab" -->
 ## Teuer ab (ct/kWh × 10)
 
 Preisschwelle für das Preisniveau „Teuer" in ct/kWh, multipliziert mit 10.  
@@ -120,7 +137,7 @@ Beispiel: Wert `300` entspricht 30,0 ct/kWh.
 
 <!-- DOCEND -->
 
-<!-- DOC -->
+<!-- DOC HelpContext="Guenstigstes-Preisfenster" -->
 ## Günstigste zusammenhängende Stunden
 
 Anzahl der aufeinanderfolgenden Stunden, für die das günstigste zusammenhängende Preisfenster berechnet wird.  
