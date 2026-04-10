@@ -18,13 +18,13 @@
               </Union>
 
               <!-- Country (Byte 1) – nur bei aWATTar -->
-              <Union SizeInBit="8">
-                <Memory CodeSegment="%MID%" Offset="1" BitOffset="0" />
+              <Union SizeInBit="8" op:nowarn="true" >
+                <Memory CodeSegment="%MID%" Offset="1" BitOffset="0"  />
                 <Parameter Id="%AID%_UP-%TT%%CC%002" Name="CH%C%Country" ParameterType="%AID%_PT-EPCountry" Offset="0" BitOffset="0" Text="Land" Value="0" />
               </Union>
 
               <!-- Energy Charts Bidding Zone (Byte 1, selber Offset wie Country) -->
-              <Union SizeInBit="8">
+              <Union SizeInBit="8" op:nowarn="true">
                 <Memory CodeSegment="%MID%" Offset="1" BitOffset="0" />
                 <Parameter Id="%AID%_UP-%TT%%CC%007" Name="CH%C%EnergyChartsBZN" ParameterType="%AID%_PT-EPEnergyChartsBZN" Offset="0" BitOffset="0" Text="Handelszone" Value="0" />
               </Union>
